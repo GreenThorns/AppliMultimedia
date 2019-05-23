@@ -1,4 +1,4 @@
-#include "pch.h"
+//#include "pch.h"
 
 #include <opencv2/opencv.hpp>
 
@@ -119,7 +119,19 @@ void brightness_tool() {
 		//2621440 = Bas
 		//2555904 = Droite
 
-		k = waitKeyEx(20);
+		if ( CV_MAJOR_VERSION < 3)
+	  	{
+	      // Old OpenCV 2 code goes here. 
+	  		k = waitKey(20);
+
+	  	} 
+	  	else
+	  	{
+	      // New OpenCV 3 code goes here. 
+	  		k = waitKeyEx(20);
+	  	}
+
+		
 
 		if (k == 27 || k == 1048603) { //ESC
 			break;
@@ -188,7 +200,18 @@ void erosion_tool() {
 		//2621440 = Bas
 		//2555904 = Droite
 
-		k = waitKeyEx(20);
+		if ( CV_MAJOR_VERSION < 3)
+	  	{
+	      // Old OpenCV 2 code goes here. 
+	  		k = waitKey(20);
+
+	  	} 
+	  	else
+	  	{
+	      // New OpenCV 3 code goes here. 
+	  		k = waitKeyEx(20);
+	  	}
+
 
 		if (k == 27 || k == 1048603) { //ESC
 			break;
@@ -245,8 +268,18 @@ void edgeDetection() {
 		/// Show the image
 		CannyThreshold(0, 0);
 
-		//k = waitKeyEx(0); //V3
-		k = waitKey(0); //V2
+
+		if ( CV_MAJOR_VERSION < 3)
+	  	{
+	      // Old OpenCV 2 code goes here. 
+	  		k = waitKey(20);
+
+	  	} 
+	  	else
+	  	{
+	      // New OpenCV 3 code goes here. 
+	  		k = waitKeyEx(20);
+	  	}
 
 		if (k == 27 || k == escapeKey) { //ESC
 			break;
@@ -274,7 +307,18 @@ void resize_tool() {
 		imshow(windowName, aff);
 
 
-		k = waitKeyEx(0);
+		if ( CV_MAJOR_VERSION < 3)
+	  	{
+	      // Old OpenCV 2 code goes here. 
+	  		k = waitKey(20);
+
+	  	} 
+	  	else
+	  	{
+	      // New OpenCV 3 code goes here. 
+	  		k = waitKeyEx(20);
+	  	}
+
 		
 		if (k == 2490368) {
 			addY += 0.1;
@@ -380,7 +424,21 @@ int main(int argc, char** argv)
 
 		imshow(windowName, image);
 		//putText(temp, "ESC to exit / c to clear", Point(10, 30), FONT_HERSHEY_PLAIN, 1, Scalar(255, 255, 255), 2);
-		k = waitKeyEx(20);
+		
+
+		if ( CV_MAJOR_VERSION < 3)
+	  	{
+	      // Old OpenCV 2 code goes here. 
+	  		k = waitKey(20);
+
+	  	} 
+	  	else
+	  	{
+	      // New OpenCV 3 code goes here. 
+	  		k = waitKeyEx(20);
+	  	}
+
+
 		//cout << k << endl;
 		if (k == 99 || k == 1048675) { //C
 			cout << "Image cleared" << endl;
