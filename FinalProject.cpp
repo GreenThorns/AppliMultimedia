@@ -8,7 +8,7 @@
 using namespace cv;
 using namespace std;
 
-Mat reference = imread("E:\\van_gogh.jpg");
+Mat reference = imread("van_gogh.jpg");
 Mat image = reference.clone();
 Mat temp = image.clone();
 String selectedTool = "None";
@@ -128,7 +128,7 @@ void brightness_tool() {
 	  	else
 	  	{
 	      // New OpenCV 3 code goes here. 
-	  		k = waitKeyEx(20);
+	  		//k = waitKeyEx(20);
 	  	}
 
 		
@@ -209,7 +209,7 @@ void erosion_tool() {
 	  	else
 	  	{
 	      // New OpenCV 3 code goes here. 
-	  		k = waitKeyEx(20);
+	  		//k = waitKeyEx(20);
 	  	}
 
 
@@ -278,7 +278,7 @@ void edgeDetection() {
 	  	else
 	  	{
 	      // New OpenCV 3 code goes here. 
-	  		k = waitKeyEx(20);
+	  		//k = waitKeyEx(20);
 	  	}
 
 		if (k == 27 || k == escapeKey) { //ESC
@@ -297,15 +297,18 @@ void resize_tool() {
 
 	double addX = 0;
 	double addY = 0;
+	int change = 1;
 
 	int k = 0;
 	while (k != 27) {
 
 		Mat aff = image.clone();
+		
+		/*
 		String windowName = "Resize Tool";
 		namedWindow(windowName);
 		imshow(windowName, aff);
-
+		*/
 
 		if ( CV_MAJOR_VERSION < 3)
 	  	{
@@ -316,41 +319,57 @@ void resize_tool() {
 	  	else
 	  	{
 	      // New OpenCV 3 code goes here. 
-	  		k = waitKeyEx(20);
+	  		//k = waitKeyEx(20);
 	  	}
 
 		
-		if (k == 2490368) {
+		if (k == 2490368 || k == 1113938) { //fleche haut
 			addY += 0.1;
+			change = 1;
 		}
 
-		if (k == 2621440) {
+		if (k == 2621440 || k == 1113940) { //fleche bas 
 			addY -= 0.1;
+			change = 1;
 		}
 
-		if (k == 2555904) {
+		if (k == 2555904 || k == 1113939) { // fleche droite
 			addX += 0.1;
+			change = 1;
 		}
 
-		if (k == 2424832) {
+		if (k == 2424832 || k == 1113937) { //fleche gauche 
 			addX -= 0.1;
+			change = 1;
 		}
 
-		if (k == 27) { //ESC
+		if (k == 27 || k == 1048603) { //ESC
 			break;
 		}
 
-		if (k == 115) { //S
+		
+
+		if(change){
+			cout << addX << " / " << addY << endl;
+			change = 0;
+		}
+		
+		resize(image,aff,Size(),1+addX,1+addY);
+		String windowName = "Resize Tool";
+		namedWindow(windowName, WINDOW_AUTOSIZE);
+		imshow(windowName,aff);
+
+		if (k == 115 || k == 1048691) { //S
 			aff.copyTo(image);
+			destroyWindow(windowName);
+			//destroyWindow(windowName2);
 			break;
 		}
-		destroyWindow(windowName);
-		cout << addX << " / " << addY << endl;
-		resize(image, aff, aff.size(), 1 + addX, 1 + addY, INTER_LINEAR);
+		
 	}
 
 	cout << "Back to Menu" << endl;
-	//destroyWindow(windowName);
+	
 	help();
 }
 
@@ -435,7 +454,7 @@ int main(int argc, char** argv)
 	  	else
 	  	{
 	      // New OpenCV 3 code goes here. 
-	  		k = waitKeyEx(20);
+	  		//k = waitKeyEx(20);
 	  	}
 
 
@@ -460,7 +479,7 @@ int main(int argc, char** argv)
 			erosion_tool();
 		}
 
-		if (k == 102) { //F à rajouter touche OpenCV 2.
+		if (k == 102 || k == 1048678) { //F 
 			cout << "Tool: Edge Detection selected" << endl;
 			edgeDetection();
 		}
