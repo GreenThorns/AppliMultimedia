@@ -41,6 +41,21 @@ int kernel_size = 3;
 
 String window_name = "Edge Map";
 
+
+//Variables for crop tool
+
+bool leftDown=false,leftup=false;
+Point cor1,cor2;
+Rect box;
+
+//Variables for rotate tool
+
+Mat src,  rotate_dst, M;
+int phi= 180;
+int xsize = 10;
+int const max_phi = 360;
+int const max_xsize = 100;
+
 void mouse_callback(int event, int x, int y, int flags, void* param) {
 
 	if (event == 1)
@@ -72,6 +87,8 @@ void help() {
 	cout << "E: Erosion Tool" << endl;
 	cout << "F: Canny Edge Detection Tool" << endl;
 	cout << "R: Resize Tool" << endl;
+	cout << "T: crop Tool" << endl;
+	cout << "O: rotate Tool" << endl;
 
 }
 
@@ -231,6 +248,43 @@ void erosion_tool() {
 	help();
 }
 
+
+void RotateAngle( int, void* )
+{
+   Point2f center(src.cols/2, src.rows/2);
+   double rotationAngle=phi-180;
+   double scale=(float)xsize/10;
+
+   Point2f pc(src.cols/2., src.rows/2.);
+   M = getRotationMatrix2D(pc, rotationAngle, scale);
+
+   warpAffine(src, rotate_dst, M, src.size());
+
+   imshow( "Ajust rotation angle", rotate_dst );
+
+
+}
+
+
+void RotateAngle_main()
+{
+  
+  src = image;
+  
+  namedWindow( "Ajust rotation angle", WINDOW_AUTOSIZE );
+  moveWindow( "Ajust rotation angle", src.cols, 0 );
+  createTrackbar( "Ajust angle :\n ", "Ajust rotation angle",
+          &phi, max_phi,
+          RotateAngle );
+  createTrackbar( "Ajust crop factor :\n ", "Ajust rotation angle",
+          &xsize, max_xsize,
+          RotateAngle );
+
+  RotateAngle( 0, 0 );
+  waitKey(0);
+
+}
+
 void CannyThreshold(int, void*)
 {
 	/// Reduce noise with a kernel 3x3
@@ -324,22 +378,22 @@ void resize_tool() {
 
 		
 		if (k == 2490368 || k == 1113938) { //fleche haut
-			addY += 0.1;
+			addY += 0.05;
 			change = 1;
 		}
 
 		if (k == 2621440 || k == 1113940) { //fleche bas 
-			addY -= 0.1;
+			addY -= 0.05;
 			change = 1;
 		}
 
 		if (k == 2555904 || k == 1113939) { // fleche droite
-			addX += 0.1;
+			addX += 0.05;
 			change = 1;
 		}
 
 		if (k == 2424832 || k == 1113937) { //fleche gauche 
-			addX -= 0.1;
+			addX -= 0.05;
 			change = 1;
 		}
 
@@ -372,6 +426,88 @@ void resize_tool() {
 	
 	help();
 }
+
+
+void mouse_call(int event,int x,int y,int,void*)
+{
+	if(event==EVENT_LBUTTONDOWN)
+	{
+		leftDown=true;
+		cor1.x=x;
+		cor1.y=y;
+
+	 
+	}
+	if(event==EVENT_LBUTTONUP)
+	{
+
+		leftup=true;
+		cor2.x=x;
+		cor2.y=y;
+
+	}
+ 
+	if(leftDown==true&&leftup==false) //when the left button is down
+	{
+		Point pt;
+		pt.x=x;
+		pt.y=y;
+		Mat temp_img=image.clone();
+		rectangle(temp_img,cor1,pt,Scalar(0,255,0)); //drawing a rectangle continuously
+		imshow("Original",temp_img);
+	 
+	}
+	if(leftDown==true&&leftup==true) //when the selection is done
+	{
+	 
+		box.width=abs(cor1.x-cor2.x);
+		box.height=abs(cor1.y-cor2.y);
+		box.x=min(cor1.x,cor2.x);
+		box.y=min(cor1.y,cor2.y);
+		Mat crop(image,box); //Selecting a ROI(region of interest) from the original pic
+		namedWindow("Cropped Image");
+		imshow("Cropped Image",crop); //showing the cropped image
+		leftDown=false;
+		leftup=false;
+	 
+	}
+ 
+}
+
+
+void crop_tool()
+{
+
+	namedWindow("Original");
+	imshow("Original",image);
+
+	int k =0;
+
+	while(k !=27 || k!= 1048603)
+        {
+
+        if ( CV_MAJOR_VERSION < 3)
+	  	{
+	      // Old OpenCV 2 code goes here. 
+	  		k = waitKey(20);
+
+	  	} 
+	  	else
+	  	{
+	      // New OpenCV 3 code goes here. 
+	  		//k = waitKeyEx(20);
+	  	}
+
+  	    namedWindow("Original");
+	    imshow("Original",image);
+  	    putText(image,"Choose corner, and drag, Press ESC to exit and S to save" ,Point(10,30), FONT_HERSHEY_SIMPLEX, 0.7, Scalar(255,255,255), 2 );
+
+	setMouseCallback("Original",mouse_call); //setting the mouse callback for selecting the region with mouse
+	 
+	}
+	
+}
+
 
 int cropAndResize_students() {
 
@@ -447,8 +583,9 @@ int main(int argc, char** argv)
 
 		if ( CV_MAJOR_VERSION < 3)
 	  	{
-	      // Old OpenCV 2 code goes here. 
-	  		k = waitKey(20);
+	      // Old OpenCV 2 code goes here.
+	      	
+	  		k = waitKey(20); 
 
 	  	} 
 	  	else
@@ -458,7 +595,17 @@ int main(int argc, char** argv)
 	  	}
 
 
-		//cout << k << endl;
+		
+
+
+	  	if (k == 116 || k == 1048692 ){ //T
+
+			cout << "Tool: Crop selected" << endl;
+			crop_tool();
+
+		}
+		
+
 		if (k == 99 || k == 1048675) { //C
 			cout << "Image cleared" << endl;
 			clear();
@@ -483,6 +630,13 @@ int main(int argc, char** argv)
 			cout << "Tool: Edge Detection selected" << endl;
 			edgeDetection();
 		}
+
+		if (k == 111 || k == 1048687) { //O
+			cout << "Tool: Rotate selected" << endl;
+			RotateAngle_main();
+		}
+	
+		
 	}
 
 	cout << "Finish" << endl;

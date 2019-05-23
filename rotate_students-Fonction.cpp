@@ -3,6 +3,8 @@
 #include <iostream>
 using namespace cv;
 using namespace std;
+
+
 Mat src,  rotate_dst, M;
 Mat reference = imread("van_gogh.jpg");
 int phi= 180;
@@ -11,7 +13,9 @@ int const max_phi = 360;
 int const max_xsize = 100;
 
 void RotateAngle( int, void* );
-void RotateAngle main( int argc, char** argv )
+
+
+void RotateAngle_main( int argc, char** argv )
 {
   CommandLineParser parser( argc, argv, "{@input | ../data/LinuxLogo.jpg | input image}" );
   src = reference;
