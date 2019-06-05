@@ -1,4 +1,19 @@
 //#include "pch.h"
+#include "opencv2/imgproc/imgproc.hpp"
+#include "opencv2/highgui/highgui.hpp"
+#include <stdlib.h>
+#include <stdio.h>
+
+#include <iostream>
+
+using namespace cv;
+using namespace std;
+
+Mat reference = imread("van_gogh.jpg");
+Mat image = reference.clone();
+Mat temp = image.clone();
+String selectedTool = "None";
+
 
 //ErosionTool
 Mat ErosionDilation_dst;
@@ -24,17 +39,29 @@ String window_name = "Edge Map";
 
 //Variables for crop tool
 
-bool leftDown = false, leftup = false;
+bool leftDown=false,leftup=false;
+Mat src,  brightness_dst;
+int beta= 50;
+int alpha = 50;
+int const max_beta = 100;
+int const max_alpha = 100;
 Point cor1, cor2;
 Rect box;
 
 //Variables for rotate tool
 
-Mat src, rotate_dst, M;
+//Mat src, rotate_dst, M;
+Mat rotate_dst, M;
 int phi = 180;
 int xsize = 10;
 int const max_phi = 360;
 int const max_xsize = 100;
+
+//Variables for BrightnessContrast tool
+
+
+
+
 
 void mouse_callback(int event, int x, int y, int flags, void* param) {
 
@@ -74,6 +101,11 @@ void help() {
 
 void BrightnessContrast(int, void*)
 {
+
+
+int const max_beta = 100;
+int const max_alpha = 100;
+
 	float alpha2 = (float)alpha / 50;
 	float beta2 = beta - 50;
 	Mat element = Mat::zeros(image.size(), image.type());
@@ -125,7 +157,7 @@ void brightness_tool() {
 		else
 		{
 			// New OpenCV 3 code goes here. 
-			k = waitKeyEx(20);
+			//k = waitKeyEx(20);
 		}
 
 
@@ -206,7 +238,7 @@ void erosion_tool() {
 		else
 		{
 			// New OpenCV 3 code goes here. 
-			k = waitKeyEx(20);
+			//k = waitKeyEx(20);
 		}
 
 
@@ -280,7 +312,7 @@ void rotate_tool()
 		else
 		{
 			// New OpenCV 3 code goes here. 
-			k = waitKeyEx(20);
+			//k = waitKeyEx(20);
 		}
 
 
@@ -350,7 +382,7 @@ void edgeDetection() {
 		else
 		{
 			// New OpenCV 3 code goes here. 
-			k = waitKeyEx(20);
+			//k = waitKeyEx(20);
 		}
 
 		if (k == 27 || k == escapeKey) { //ESC
@@ -393,7 +425,7 @@ void resize_tool() {
 		else
 		{
 			// New OpenCV 3 code goes here. 
-			k = waitKeyEx(20);
+			//k = waitKeyEx(20);
 		}
 
 
@@ -516,7 +548,7 @@ void crop_tool()
 		else
 		{
 			// New OpenCV 3 code goes here. 
-			k = waitKeyEx(20);
+			//k = waitKeyEx(20);
 		}
 
 		imshow(windowName, image);
@@ -574,7 +606,7 @@ int main(int argc, char** argv)
 		else
 		{
 			// New OpenCV 3 code goes here. 
-			k = waitKeyEx(20);
+			//k = waitKeyEx(20);
 		}
 
 
