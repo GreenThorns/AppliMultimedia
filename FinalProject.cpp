@@ -461,6 +461,14 @@ void resize_tool() {
 			change = 0;
 		}
 
+		if(addX <=-1){
+			addX = -0.95;
+		}
+
+		if(addY <=-1){
+			addY = -0.95;
+		}
+
 		resize(image, aff, Size(), 1 + addX, 1 + addY);
 		
 		imshow(windowName, aff);
@@ -473,7 +481,8 @@ void resize_tool() {
 		}
 
 	}
-
+	
+	destroyWindow(window_name);
 	cout << "Back to Menu" << endl;
 
 	help();
